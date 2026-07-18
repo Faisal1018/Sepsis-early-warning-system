@@ -62,7 +62,7 @@ st.markdown("""
 # --------------------------------------------------
 
 model = joblib.load(
-    "xgboost_sepsis_model.pkl"
+    "models/xgboost_sepsis_model.pkl"
 )
 
 # --------------------------------------------------
