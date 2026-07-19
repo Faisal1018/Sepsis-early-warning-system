@@ -2,13 +2,13 @@ import streamlit as st
 import numpy as np
 import joblib
 
+# ---------------- LOAD MODEL ----------------
+model = joblib.load("model.pkl")  # <-- tomar model file
+
 # ---------------- PAGE CONFIG ----------------
 st.set_page_config(page_title="ICU Clinical Dashboard", layout="wide")
 
-# ---------------- LOAD MODEL ----------------
-model = joblib.load("models/xgboost_sepsis_model.pkl")
-
-# ---------------- CUSTOM CSS ----------------
+# ---------------- CSS ----------------
 st.markdown("""
 <style>
 
@@ -54,7 +54,7 @@ section[data-testid="stSidebar"] {
     color: #9ca3af;
 }
 
-/* Risk Colors */
+/* Risk */
 .low {
     background: linear-gradient(90deg,#16a34a,#15803d);
 }
@@ -79,7 +79,7 @@ section[data-testid="stSidebar"] {
 </style>
 """, unsafe_allow_html=True)
 
-# ---------------- SIDEBAR INPUT ----------------
+# ---------------- SIDEBAR ----------------
 st.sidebar.title("🩺 Patient Assessment")
 
 age = st.sidebar.slider("Age", 0, 100, 65)
@@ -90,17 +90,17 @@ resp_rate = st.sidebar.slider("Resp Rate", 5, 40, 18)
 temperature = st.sidebar.slider("Temperature", 30.0, 42.0, 37.0)
 icu_hours = st.sidebar.slider("ICU Hours", 0, 200, 30)
 
-# ---------------- INPUT PREPARATION ----------------
+# ---------------- INPUT PREP ----------------
+# IMPORTANT: same order as training
 gender_val = 1 if gender == "Male" else 0
 
-# ⚠️ IMPORTANT: must match training order
 input_data = np.array([[age, gender_val, oxygen, heart_rate, resp_rate, temperature, icu_hours]])
 
 # ---------------- MODEL PREDICTION ----------------
 prediction = model.predict(input_data)[0]
 probability = model.predict_proba(input_data)[0][1]
 
-# ---------------- RISK CLASSIFICATION ----------------
+# ---------------- RISK LOGIC ----------------
 if probability < 0.3:
     risk_text = f"🟢 Low Risk ({probability*100:.2f}%)"
     risk_class = "low"
@@ -121,7 +121,7 @@ st.markdown("""
 
 st.markdown("<br>", unsafe_allow_html=True)
 
-# ---------------- VITAL METRICS ----------------
+# ---------------- METRICS ----------------
 col1, col2, col3, col4 = st.columns(4)
 
 with col1:
@@ -201,7 +201,7 @@ st.subheader("Sepsis Probability")
 st.progress(int(probability * 100))
 st.write(f"{probability*100:.2f}%")
 
-# ---------------- DEBUG (optional) ----------------
+# ---------------- DEBUG (optional remove later) ----------------
 # st.write("Prediction:", prediction)
 # st.write("Probability:", probability)
 
