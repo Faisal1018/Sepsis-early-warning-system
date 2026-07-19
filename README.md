@@ -9,7 +9,7 @@ An end-to-end **Healthcare AI System** for predicting **Sepsis Risk in ICU Patie
 | Platform          | Link                                                                      |
 | ----------------- | ------------------------------------------------------------------------- |
 | Streamlit App     | https://sepsis-early-warning-system-kjmtbe6wxygc3vzyvnrawc.streamlit.app/                                                              |
-| GitHub Repository | https://github.com/Faisal1018/Explainable-ICU-Sepsis-Early-Warning-System |
+| GitHub Repository | https://github.com/Faisal1018/Sepsis-early-warning-system |
 
 ---
 
