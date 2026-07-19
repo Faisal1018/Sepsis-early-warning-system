@@ -14,89 +14,61 @@ st.set_page_config(
 )
 
 # =====================================================
-# FULL UI FIX CSS (MAIN FIX)
+# PROFESSIONAL MEDICAL CSS (SOFT + CLEAN)
 # =====================================================
 
 st.markdown("""
 <style>
 
 /* ===== GLOBAL ===== */
-html, body, [class*="css"] {
+body {
+    background-color: #f4f7fb;
+    color: #1e293b;
     font-family: 'Segoe UI', sans-serif;
-    color: #0f172a !important;
 }
 
-/* Background */
-.stApp {
-    background-color: #f1f5f9;
-}
-
-/* Sidebar */
+/* ===== SIDEBAR ===== */
 section[data-testid="stSidebar"] {
     background-color: #ffffff;
     border-right: 1px solid #e2e8f0;
 }
 
-/* Sidebar text fix */
 section[data-testid="stSidebar"] * {
-    color: #0f172a !important;
+    color: #1e293b !important;
 }
 
-/* Header Card */
-.header-card {
+/* ===== HEADER ===== */
+.header-box {
     background: #ffffff;
     padding: 25px;
-    border-radius: 18px;
+    border-radius: 16px;
     border: 1px solid #e2e8f0;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
 }
 
-/* Titles */
-.big-title {
-    font-size: 34px;
-    font-weight: 700;
-    color: #0f172a;
-}
-
-.sub {
-    font-size: 16px;
-    color: #475569;
-}
-
-/* Selectbox FIX */
-.stSelectbox > div {
-    background-color: #ffffff !important;
-    border: 1px solid #cbd5e1 !important;
-    border-radius: 10px;
-}
-
-/* Driver Card */
-.driver-card {
+/* ===== CARD ===== */
+.card {
     background: #ffffff;
-    border-left: 5px solid #ef4444;
+    padding: 18px;
+    border-radius: 14px;
+    border: 1px solid #e2e8f0;
+}
+
+/* ===== DRIVER ===== */
+.driver {
+    background: #ffffff;
+    border-left: 4px solid #ef4444;
     padding: 10px;
     border-radius: 8px;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
 }
 
-/* Footer */
-.author-card {
+/* ===== FOOTER ===== */
+.footer {
     background: #ffffff;
-    border: 1px solid #e2e8f0;
     padding: 20px;
-    border-radius: 15px;
+    border-radius: 14px;
+    border: 1px solid #e2e8f0;
     text-align: center;
-}
-
-/* Metric */
-[data-testid="stMetricValue"] {
-    color: #0f172a !important;
-}
-
-/* Labels */
-label {
-    color: #0f172a !important;
-    font-weight: 600;
 }
 
 </style>
@@ -113,9 +85,9 @@ model = joblib.load("models/xgboost_sepsis_model.pkl")
 # =====================================================
 
 st.markdown("""
-<div class="header-card">
-<div class="big-title">🩺 ICU Clinical Intelligence Platform</div>
-<div class="sub">AI Powered Early Sepsis Detection & Clinical Decision Support System</div>
+<div class="header-box">
+<h2>🩺 ICU Clinical Intelligence Platform</h2>
+<p>AI Powered Early Sepsis Detection & Clinical Decision Support System</p>
 </div>
 """, unsafe_allow_html=True)
 
@@ -182,26 +154,28 @@ else:
 # =====================================================
 
 k1,k2,k3,k4 = st.columns(4)
-k1.metric("❤️ Heart Rate", hr)
-k2.metric("🫁 Resp Rate", resp)
-k3.metric("🌡 Temp", temp)
-k4.metric("🏥 ICU Hours", iculos)
+k1.metric("Heart Rate", hr)
+k2.metric("Resp Rate", resp)
+k3.metric("Temperature", temp)
+k4.metric("ICU Hours", iculos)
 
 st.write("")
 
 # =====================================================
-# MAIN
+# MAIN SECTION
 # =====================================================
 
 left,center,right = st.columns([1,2,1])
 
+# LEFT
 with left:
-    st.markdown("### 👤 Patient Info")
+    st.markdown("### Patient Info")
     st.metric("Age",age)
     st.metric("Gender",gender)
     st.metric("WBC",wbc)
     st.metric("Creatinine",creatinine)
 
+# CENTER
 with center:
 
     fig = go.Figure(go.Indicator(
@@ -211,7 +185,7 @@ with center:
         number={"suffix":"%"},
         gauge={
             "axis":{"range":[0,100]},
-            "bar":{"color":"#ef4444"},
+            "bar":{"color":"#dc2626"},
             "steps":[
                 {"range":[0,30],"color":"#22c55e"},
                 {"range":[30,60],"color":"#f59e0b"},
@@ -223,25 +197,27 @@ with center:
     fig.update_layout(
         height=420,
         paper_bgcolor="#ffffff",
-        font={"color":"#0f172a"}
+        font={"color":"#1e293b"}
     )
 
     st.plotly_chart(fig,use_container_width=True)
 
+# RIGHT
 with right:
-    st.markdown("### 🚨 Status")
+    st.markdown("### Status")
     st.metric("Risk",f"{risk}%")
     st.info(status)
     st.metric("Model","XGBoost")
 
 # =====================================================
-# TREND
+# TREND + DRIVER
 # =====================================================
 
 st.markdown("---")
 
 col1,col2 = st.columns(2)
 
+# TREND
 with col1:
     trend = pd.DataFrame({
         "Hour":[1,2,3,4,5,6],
@@ -259,35 +235,36 @@ with col1:
         title="Risk Trend",
         height=350,
         paper_bgcolor="#ffffff",
-        font={"color":"#0f172a"}
+        font={"color":"#1e293b"}
     )
 
     st.plotly_chart(fig2,use_container_width=True)
 
+# DRIVERS
 with col2:
 
-    st.markdown("### 🧠 AI Risk Drivers")
+    st.markdown("### AI Risk Drivers")
 
     drivers = []
 
     if hr > 100:
-        drivers.append("⬆ Elevated Heart Rate")
+        drivers.append("Elevated Heart Rate")
     if resp > 22:
-        drivers.append("⬆ Elevated Respiratory Rate")
+        drivers.append("Elevated Respiratory Rate")
     if temp > 38:
-        drivers.append("⬆ Fever Detected")
+        drivers.append("Fever Detected")
     if creatinine > 1.5:
-        drivers.append("⬆ Kidney Dysfunction")
+        drivers.append("Kidney Dysfunction")
     if iculos > 48:
-        drivers.append("⬆ Long ICU Stay")
+        drivers.append("Long ICU Stay")
     if wbc > 12:
-        drivers.append("⬆ Abnormal WBC Count")
+        drivers.append("Abnormal WBC Count")
 
     if len(drivers)==0:
-        drivers.append("✅ No major risk driver detected")
+        drivers.append("No major risk driver detected")
 
     for d in drivers:
-        st.markdown(f"<div class='driver-card'>{d}</div>", unsafe_allow_html=True)
+        st.markdown(f"<div class='driver'>{d}</div>", unsafe_allow_html=True)
 
 # =====================================================
 # RECOMMENDATION
@@ -295,14 +272,14 @@ with col2:
 
 st.markdown("---")
 
-st.subheader("👨‍⚕️ Clinical Recommendation")
+st.subheader("Clinical Recommendation")
 
 if risk >= 70:
-    st.error("🚨 High Risk: Immediate physician review required.")
+    st.error("High Risk: Immediate physician review required.")
 elif risk >= 40:
-    st.warning("⚠ Moderate Risk: Monitor closely.")
+    st.warning("Moderate Risk: Monitor closely.")
 else:
-    st.success("✅ Low Risk: Routine monitoring.")
+    st.success("Low Risk: Routine monitoring.")
 
 # =====================================================
 # FOOTER
@@ -311,11 +288,11 @@ else:
 st.markdown("---")
 
 st.markdown("""
-<div class='author-card'>
-<h3>👨‍💻 Developed By</h3>
+<div class='footer'>
+<h4>Developed By</h4>
 <b>MD. FAISAL HAMID</b><br><br>
 Machine Learning Engineer<br>
 Healthcare AI | Explainable AI | XGBoost<br><br>
-🩺 ICU Sepsis Early Warning System
+ICU Sepsis Early Warning System
 </div>
 """, unsafe_allow_html=True)
