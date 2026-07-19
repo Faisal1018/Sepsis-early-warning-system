@@ -75,7 +75,7 @@ body {
 # LOAD MODEL
 # --------------------------------------------------
 
-model = joblib.load("xgboost_sepsis_model.pkl")
+model = joblib.load("models/xgboost_sepsis_model.pkl")
 
 # --------------------------------------------------
 # HEADER
