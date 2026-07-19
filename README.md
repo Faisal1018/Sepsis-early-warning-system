@@ -214,21 +214,18 @@ Higher values of:
 ---
 
 ## 📸 Screenshots
-## 📸 Screenshots
-
-## 📸 Screenshots
 
 ### Dashboard
 ![Dashboard](screenshots/Dashboard.png)
 
 ### Confusion Matrix
-![Confusion Matrix](screenshots/Confusion_Matrix.png)
+![Confusion Matrix](screenshots/Confusion%Matrix.png)
 
 ### Correlation Heatmap
-![Correlation Heatmap](screenshots/Correlation_Heatmap.png)
+![Correlation Heatmap](screenshots/Correlation%Heatmap.png)
 
 ### SHAP Plot
-![SHAP Plot](screenshots/SHAP_Plot.png)
+![SHAP Plot](screenshots/SHAP%Plot.png)
 ---
 
 ## 🛠️ Tech Stack
