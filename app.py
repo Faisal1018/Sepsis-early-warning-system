@@ -78,15 +78,20 @@ body {
 model = joblib.load("models/xgboost_sepsis_model.pkl")
 
 # --------------------------------------------------
+# --------------------------------------------------
 # HEADER
 # --------------------------------------------------
 
-st.markdown("<div class='title'>🩺 ICU Sepsis Early Warning System</div>", unsafe_allow_html=True)
-st.markdown("<div class='author'>Author: Faisal1018</div>", unsafe_allow_html=True)
+st.title("🩺 ICU Sepsis Early Warning System")
 
-st.markdown("""
-AI-powered clinical decision support platform for early sepsis risk assessment in ICU patients.
-""")
+st.markdown("**Author: Faisal Hamid**")
+
+st.markdown(
+"""
+AI-powered clinical decision support platform for
+early sepsis risk assessment in ICU patients.
+"""
+)
 
 st.write("---")
 
