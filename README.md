@@ -214,12 +214,12 @@ Higher values of:
 ---
 
 ## 📸 Screenshots
-screenshots/Dashboard.png
-screenshots/Confusion Matrix.png
-screenshots/Correlation Heatmap.png
-screenshots/SHAP Plot.png
+## 📸 Screenshots
 
-* Prediction Example
+![Dashboard](screenshots/Dashboard.png)
+![Confusion Matrix](screenshots/Confusion%20Matrix.png)
+![Correlation Heatmap](screenshots/Correlation%20Heatmap.png)
+![SHAP Plot](screenshots/SHAP%20Plot.png)
 
 ---
 
