@@ -1,8 +1,14 @@
 import streamlit as st
+import numpy as np
+import joblib
 
-st.set_page_config(page_title="ICU Dashboard", layout="wide")
+# ---------------- PAGE CONFIG ----------------
+st.set_page_config(page_title="ICU Clinical Dashboard", layout="wide")
 
-# ---------------- CSS ----------------
+# ---------------- LOAD MODEL ----------------
+model = joblib.load("models/xgboost_sepsis_model.pkl")
+
+# ---------------- CUSTOM CSS ----------------
 st.markdown("""
 <style>
 
@@ -14,7 +20,6 @@ body {
 /* Sidebar */
 section[data-testid="stSidebar"] {
     background-color: #111827;
-    border-right: 1px solid #1f2937;
 }
 
 /* Card */
@@ -26,9 +31,9 @@ section[data-testid="stSidebar"] {
     box-shadow: 0 0 15px rgba(0,0,0,0.3);
 }
 
-/* Header */
+/* Title */
 .title {
-    font-size: 30px;
+    font-size: 28px;
     font-weight: 700;
     color: #22c55e;
 }
@@ -49,7 +54,7 @@ section[data-testid="stSidebar"] {
     color: #9ca3af;
 }
 
-/* Risk */
+/* Risk Colors */
 .low {
     background: linear-gradient(90deg,#16a34a,#15803d);
 }
@@ -63,29 +68,48 @@ section[data-testid="stSidebar"] {
 }
 
 .riskbox {
-    padding: 18px;
+    padding: 20px;
     border-radius: 12px;
     text-align:center;
     color:white;
     font-size:18px;
-    font-weight:500;
+    font-weight:600;
 }
 
 </style>
 """, unsafe_allow_html=True)
 
-# ---------------- SIDEBAR ----------------
+# ---------------- SIDEBAR INPUT ----------------
 st.sidebar.title("🩺 Patient Assessment")
 
 age = st.sidebar.slider("Age", 0, 100, 65)
 gender = st.sidebar.selectbox("Gender", ["Female", "Male"])
 oxygen = st.sidebar.slider("Oxygen Saturation", 0, 100, 95)
-
-# ADD more fields if you already had them (NO CHANGE)
 heart_rate = st.sidebar.slider("Heart Rate", 30, 180, 90)
 resp_rate = st.sidebar.slider("Resp Rate", 5, 40, 18)
 temperature = st.sidebar.slider("Temperature", 30.0, 42.0, 37.0)
 icu_hours = st.sidebar.slider("ICU Hours", 0, 200, 30)
+
+# ---------------- INPUT PREPARATION ----------------
+gender_val = 1 if gender == "Male" else 0
+
+# ⚠️ IMPORTANT: must match training order
+input_data = np.array([[age, gender_val, oxygen, heart_rate, resp_rate, temperature, icu_hours]])
+
+# ---------------- MODEL PREDICTION ----------------
+prediction = model.predict(input_data)[0]
+probability = model.predict_proba(input_data)[0][1]
+
+# ---------------- RISK CLASSIFICATION ----------------
+if probability < 0.3:
+    risk_text = f"🟢 Low Risk ({probability*100:.2f}%)"
+    risk_class = "low"
+elif probability < 0.7:
+    risk_text = f"🟡 Medium Risk ({probability*100:.2f}%)"
+    risk_class = "medium"
+else:
+    risk_text = f"🔴 High Risk ({probability*100:.2f}%)"
+    risk_class = "high"
 
 # ---------------- HEADER ----------------
 st.markdown("""
@@ -97,7 +121,7 @@ st.markdown("""
 
 st.markdown("<br>", unsafe_allow_html=True)
 
-# ---------------- METRICS ----------------
+# ---------------- VITAL METRICS ----------------
 col1, col2, col3, col4 = st.columns(4)
 
 with col1:
@@ -134,7 +158,7 @@ with col4:
 
 st.markdown("<br>", unsafe_allow_html=True)
 
-# ---------------- PATIENT SUMMARY ----------------
+# ---------------- PATIENT INFO ----------------
 colA, colB, colC = st.columns(3)
 
 with colA:
@@ -163,12 +187,7 @@ with colC:
 
 st.markdown("<br>", unsafe_allow_html=True)
 
-# ---------------- RISK (NO LOGIC CHANGE placeholder) ----------------
-# IMPORTANT: ekhane tomar original model output bosha lagbe
-
-risk_text = "Low Risk: Routine Monitoring"
-risk_class = "low"
-
+# ---------------- RISK DISPLAY ----------------
 st.markdown(f"""
 <div class="riskbox {risk_class}">
     {risk_text}
@@ -176,6 +195,15 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
 st.markdown("<br>", unsafe_allow_html=True)
+
+# ---------------- PROBABILITY BAR ----------------
+st.subheader("Sepsis Probability")
+st.progress(int(probability * 100))
+st.write(f"{probability*100:.2f}%")
+
+# ---------------- DEBUG (optional) ----------------
+# st.write("Prediction:", prediction)
+# st.write("Probability:", probability)
 
 # ---------------- FOOTER ----------------
 st.markdown("""
