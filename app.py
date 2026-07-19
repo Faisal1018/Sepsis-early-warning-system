@@ -14,60 +14,89 @@ st.set_page_config(
 )
 
 # =====================================================
-# CLEAN MEDICAL CSS
+# FULL UI FIX CSS (MAIN FIX)
 # =====================================================
 
 st.markdown("""
 <style>
 
-.stApp{
-    background-color:#f8fafc;
+/* ===== GLOBAL ===== */
+html, body, [class*="css"] {
+    font-family: 'Segoe UI', sans-serif;
+    color: #0f172a !important;
+}
+
+/* Background */
+.stApp {
+    background-color: #f1f5f9;
 }
 
 /* Sidebar */
-section[data-testid="stSidebar"]{
-    background:#ffffff;
-    border-right:1px solid #e2e8f0;
+section[data-testid="stSidebar"] {
+    background-color: #ffffff;
+    border-right: 1px solid #e2e8f0;
 }
 
-/* Card Style */
-.card{
-    background:#ffffff;
-    border:1px solid #e2e8f0;
-    border-radius:15px;
-    padding:20px;
-    box-shadow:0 2px 6px rgba(0,0,0,0.05);
+/* Sidebar text fix */
+section[data-testid="stSidebar"] * {
+    color: #0f172a !important;
 }
 
-/* Title */
-.big-title{
-    font-size:36px;
-    font-weight:700;
-    color:#0f172a;
+/* Header Card */
+.header-card {
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 18px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
 }
 
-.sub{
-    color:#475569;
-    font-size:16px;
+/* Titles */
+.big-title {
+    font-size: 34px;
+    font-weight: 700;
+    color: #0f172a;
 }
 
-/* Driver */
-.driver-card{
-    background:#ffffff;
-    border-left:5px solid #ef4444;
-    padding:10px;
-    border-radius:8px;
-    margin-bottom:8px;
-    color:#0f172a;
+.sub {
+    font-size: 16px;
+    color: #475569;
+}
+
+/* Selectbox FIX */
+.stSelectbox > div {
+    background-color: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 10px;
+}
+
+/* Driver Card */
+.driver-card {
+    background: #ffffff;
+    border-left: 5px solid #ef4444;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 8px;
 }
 
 /* Footer */
-.author-card{
-    background:#ffffff;
-    border:1px solid #e2e8f0;
-    padding:20px;
-    border-radius:15px;
-    text-align:center;
+.author-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+}
+
+/* Metric */
+[data-testid="stMetricValue"] {
+    color: #0f172a !important;
+}
+
+/* Labels */
+label {
+    color: #0f172a !important;
+    font-weight: 600;
 }
 
 </style>
@@ -84,16 +113,9 @@ model = joblib.load("models/xgboost_sepsis_model.pkl")
 # =====================================================
 
 st.markdown("""
-<div class="card">
-
-<div class="big-title">
-🩺 ICU Clinical Intelligence Platform
-</div>
-
-<div class="sub">
-AI Powered Early Sepsis Detection & Clinical Decision Support System
-</div>
-
+<div class="header-card">
+<div class="big-title">🩺 ICU Clinical Intelligence Platform</div>
+<div class="sub">AI Powered Early Sepsis Detection & Clinical Decision Support System</div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -160,7 +182,6 @@ else:
 # =====================================================
 
 k1,k2,k3,k4 = st.columns(4)
-
 k1.metric("❤️ Heart Rate", hr)
 k2.metric("🫁 Resp Rate", resp)
 k3.metric("🌡 Temp", temp)
@@ -222,14 +243,12 @@ st.markdown("---")
 col1,col2 = st.columns(2)
 
 with col1:
-
     trend = pd.DataFrame({
         "Hour":[1,2,3,4,5,6],
         "Risk":[25,35,41,57,63,risk]
     })
 
     fig2 = go.Figure()
-
     fig2.add_trace(go.Scatter(
         x=trend["Hour"],
         y=trend["Risk"],
@@ -238,7 +257,9 @@ with col1:
 
     fig2.update_layout(
         title="Risk Trend",
-        height=350
+        height=350,
+        paper_bgcolor="#ffffff",
+        font={"color":"#0f172a"}
     )
 
     st.plotly_chart(fig2,use_container_width=True)
@@ -277,11 +298,11 @@ st.markdown("---")
 st.subheader("👨‍⚕️ Clinical Recommendation")
 
 if risk >= 70:
-    st.error("High Risk: Immediate physician review required.")
+    st.error("🚨 High Risk: Immediate physician review required.")
 elif risk >= 40:
-    st.warning("Moderate Risk: Monitor closely.")
+    st.warning("⚠ Moderate Risk: Monitor closely.")
 else:
-    st.success("Low Risk: Routine monitoring.")
+    st.success("✅ Low Risk: Routine monitoring.")
 
 # =====================================================
 # FOOTER
@@ -291,15 +312,10 @@ st.markdown("---")
 
 st.markdown("""
 <div class='author-card'>
-
 <h3>👨‍💻 Developed By</h3>
-
 <b>MD. FAISAL HAMID</b><br><br>
-
 Machine Learning Engineer<br>
 Healthcare AI | Explainable AI | XGBoost<br><br>
-
 🩺 ICU Sepsis Early Warning System
-
 </div>
 """, unsafe_allow_html=True)
