@@ -14,63 +14,60 @@ st.set_page_config(
 )
 
 # =====================================================
-# CSS
+# CLEAN MEDICAL CSS
 # =====================================================
 
 st.markdown("""
 <style>
 
 .stApp{
-    background-color:#020617;
+    background-color:#f8fafc;
 }
 
+/* Sidebar */
 section[data-testid="stSidebar"]{
-    background:#0f172a;
+    background:#ffffff;
+    border-right:1px solid #e2e8f0;
 }
 
-.block-container{
-    padding-top:1rem;
-}
-
+/* Card Style */
 .card{
-    background:#0f172a;
-    border:1px solid #1e293b;
-    border-radius:20px;
+    background:#ffffff;
+    border:1px solid #e2e8f0;
+    border-radius:15px;
     padding:20px;
+    box-shadow:0 2px 6px rgba(0,0,0,0.05);
 }
 
-.risk-card{
-    background:linear-gradient(135deg,#7f1d1d,#991b1b);
-    border-radius:25px;
-    padding:30px;
-    text-align:center;
-}
-
-.author-card{
-    background:#0f172a;
-    border:1px solid #1e293b;
-    padding:20px;
-    border-radius:20px;
-}
-
-.driver-card{
-    background:#111827;
-    border-left:5px solid #ef4444;
-    padding:12px;
-    border-radius:10px;
-    margin-bottom:10px;
-    color:white;
-}
-
+/* Title */
 .big-title{
-    font-size:42px;
-    font-weight:bold;
-    color:white;
+    font-size:36px;
+    font-weight:700;
+    color:#0f172a;
 }
 
 .sub{
-    color:#cbd5e1;
-    font-size:18px;
+    color:#475569;
+    font-size:16px;
+}
+
+/* Driver */
+.driver-card{
+    background:#ffffff;
+    border-left:5px solid #ef4444;
+    padding:10px;
+    border-radius:8px;
+    margin-bottom:8px;
+    color:#0f172a;
+}
+
+/* Footer */
+.author-card{
+    background:#ffffff;
+    border:1px solid #e2e8f0;
+    padding:20px;
+    border-radius:15px;
+    text-align:center;
 }
 
 </style>
@@ -80,29 +77,21 @@ section[data-testid="stSidebar"]{
 # MODEL
 # =====================================================
 
-model = joblib.load(
-    "models/xgboost_sepsis_model.pkl"
-)
+model = joblib.load("models/xgboost_sepsis_model.pkl")
 
 # =====================================================
-# HERO HEADER
+# HEADER
 # =====================================================
 
 st.markdown("""
-<div style="
-background:linear-gradient(135deg,#0f172a,#1e40af);
-padding:30px;
-border-radius:25px;
-border:1px solid #334155;
-">
+<div class="card">
 
 <div class="big-title">
 🩺 ICU Clinical Intelligence Platform
 </div>
 
 <div class="sub">
-AI Powered Early Sepsis Detection &
-Clinical Decision Support System
+AI Powered Early Sepsis Detection & Clinical Decision Support System
 </div>
 
 </div>
@@ -111,18 +100,13 @@ Clinical Decision Support System
 st.write("")
 
 # =====================================================
-# SIDEBAR
+# SIDEBAR INPUT
 # =====================================================
 
 st.sidebar.title("🏥 Patient Assessment")
 
 age = st.sidebar.slider("Age",18,90,65)
-
-gender = st.sidebar.selectbox(
-    "Gender",
-    ["Female","Male"]
-)
-
+gender = st.sidebar.selectbox("Gender",["Female","Male"])
 gender_value = 1 if gender=="Male" else 0
 
 hr = st.sidebar.slider("Heart Rate",40,220,90)
@@ -142,7 +126,6 @@ iculos = st.sidebar.slider("ICULOS",1,300,30)
 # =====================================================
 
 patient = pd.DataFrame({
-
     "HR":[hr],
     "O2Sat":[o2sat],
     "Temp":[temp],
@@ -156,7 +139,6 @@ patient = pd.DataFrame({
     "Gender":[gender_value],
     "HospAdmTime":[hosp_adm],
     "ICULOS":[iculos]
-
 })
 
 # =====================================================
@@ -168,161 +150,100 @@ risk = round(prob*100,2)
 
 if risk < 30:
     status = "LOW RISK 🟢"
-
 elif risk < 60:
     status = "MODERATE RISK 🟡"
-
 else:
     status = "HIGH RISK 🔴"
 
 # =====================================================
-# TOP KPI
+# KPI
 # =====================================================
 
 k1,k2,k3,k4 = st.columns(4)
 
-with k1:
-    st.metric("❤️ Heart Rate", f"{hr}")
-
-with k2:
-    st.metric("🫁 Resp Rate", f"{resp}")
-
-with k3:
-    st.metric("🌡 Temp", f"{temp}")
-
-with k4:
-    st.metric("🏥 ICU Hours", f"{iculos}")
+k1.metric("❤️ Heart Rate", hr)
+k2.metric("🫁 Resp Rate", resp)
+k3.metric("🌡 Temp", temp)
+k4.metric("🏥 ICU Hours", iculos)
 
 st.write("")
 
 # =====================================================
-# MAIN AREA
+# MAIN
 # =====================================================
 
 left,center,right = st.columns([1,2,1])
 
-# =================================
-
 with left:
-
-    st.markdown("### 👤 Patient")
-
+    st.markdown("### 👤 Patient Info")
     st.metric("Age",age)
     st.metric("Gender",gender)
     st.metric("WBC",wbc)
     st.metric("Creatinine",creatinine)
 
-# =================================
-
 with center:
 
     fig = go.Figure(go.Indicator(
-
         mode="gauge+number",
-
         value=risk,
-
-        title={"text":"SEPSIS RISK SCORE"},
-
+        title={"text":"Sepsis Risk Score"},
         number={"suffix":"%"},
-
         gauge={
-
             "axis":{"range":[0,100]},
-
             "bar":{"color":"#ef4444"},
-
             "steps":[
-
-                {"range":[0,30],"color":"#10b981"},
-
+                {"range":[0,30],"color":"#22c55e"},
                 {"range":[30,60],"color":"#f59e0b"},
-
                 {"range":[60,100],"color":"#ef4444"}
-
             ]
         }
     ))
 
     fig.update_layout(
-        paper_bgcolor="#020617",
-        font={"color":"white"},
-        height=430
+        height=420,
+        paper_bgcolor="#ffffff",
+        font={"color":"#0f172a"}
     )
 
-    st.plotly_chart(
-        fig,
-        use_container_width=True
-    )
-
-# =================================
+    st.plotly_chart(fig,use_container_width=True)
 
 with right:
-
     st.markdown("### 🚨 Status")
-
-    st.metric(
-        "Risk",
-        f"{risk}%"
-    )
-
-    st.success(status)
-
-    st.metric(
-        "Model",
-        "XGBoost"
-    )
+    st.metric("Risk",f"{risk}%")
+    st.info(status)
+    st.metric("Model","XGBoost")
 
 # =====================================================
-# TREND SECTION
+# TREND
 # =====================================================
 
 st.markdown("---")
 
-trend_col1,trend_col2 = st.columns(2)
+col1,col2 = st.columns(2)
 
-with trend_col1:
+with col1:
 
     trend = pd.DataFrame({
-
         "Hour":[1,2,3,4,5,6],
         "Risk":[25,35,41,57,63,risk]
-
     })
 
-    trend_fig = go.Figure()
+    fig2 = go.Figure()
 
-    trend_fig.add_trace(
+    fig2.add_trace(go.Scatter(
+        x=trend["Hour"],
+        y=trend["Risk"],
+        mode="lines+markers"
+    ))
 
-        go.Scatter(
-            x=trend["Hour"],
-            y=trend["Risk"],
-            mode="lines+markers",
-            line=dict(color="#38bdf8",width=4)
-        )
+    fig2.update_layout(
+        title="Risk Trend",
+        height=350
     )
 
-    trend_fig.update_layout(
+    st.plotly_chart(fig2,use_container_width=True)
 
-        title="📈 Risk Trend",
-
-        template="plotly_dark",
-
-        height=350,
-
-        paper_bgcolor="#020617",
-
-        plot_bgcolor="#020617"
-    )
-
-    st.plotly_chart(
-        trend_fig,
-        use_container_width=True
-    )
-
-# =================================
-
-with trend_col2:
+with col2:
 
     st.markdown("### 🧠 AI Risk Drivers")
 
@@ -330,19 +251,14 @@ with trend_col2:
 
     if hr > 100:
         drivers.append("⬆ Elevated Heart Rate")
-
     if resp > 22:
         drivers.append("⬆ Elevated Respiratory Rate")
-
     if temp > 38:
         drivers.append("⬆ Fever Detected")
-
     if creatinine > 1.5:
         drivers.append("⬆ Kidney Dysfunction")
-
     if iculos > 48:
         drivers.append("⬆ Long ICU Stay")
-
     if wbc > 12:
         drivers.append("⬆ Abnormal WBC Count")
 
@@ -350,69 +266,22 @@ with trend_col2:
         drivers.append("✅ No major risk driver detected")
 
     for d in drivers:
-
-        st.markdown(
-            f"""
-            <div class='driver-card'>
-            {d}
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
+        st.markdown(f"<div class='driver-card'>{d}</div>", unsafe_allow_html=True)
 
 # =====================================================
-# RECOMMENDATIONS
+# RECOMMENDATION
 # =====================================================
 
 st.markdown("---")
 
-st.subheader("👨‍⚕️ Clinical Recommendation Engine")
+st.subheader("👨‍⚕️ Clinical Recommendation")
 
 if risk >= 70:
-
-    st.error("""
-
-🚨 HIGH RISK PATIENT
-
-Recommended Actions:
-
-• Immediate Physician Review
-
-• Infection Evaluation
-
-• Continuous Monitoring
-
-• Sepsis Bundle Consideration
-
-• Laboratory Assessment
-
-""")
-
+    st.error("High Risk: Immediate physician review required.")
 elif risk >= 40:
-
-    st.warning("""
-
-⚠ MODERATE RISK
-
-Recommended Actions:
-
-• Monitor Clinical Trends
-
-• Repeat Assessment
-
-• Watch Vital Sign Changes
-
-""")
-
+    st.warning("Moderate Risk: Monitor closely.")
 else:
-
-    st.success("""
-
-✅ LOW RISK
-
-Routine Monitoring Recommended
-
-""")
+    st.success("Low Risk: Routine monitoring.")
 
 # =====================================================
 # FOOTER
@@ -423,27 +292,14 @@ st.markdown("---")
 st.markdown("""
 <div class='author-card'>
 
-<h2 style='color:white'>
-👨‍💻 Developed By
-</h2>
+<h3>👨‍💻 Developed By</h3>
 
-<p style='color:#cbd5e1;font-size:18px;'>
+<b>MD. FAISAL HAMID</b><br><br>
 
-<b>MD. FAISAL HAMID</b>
+Machine Learning Engineer<br>
+Healthcare AI | Explainable AI | XGBoost<br><br>
 
-<br><br>
-
-Machine Learning Engineer
-
-<br>
-
-Healthcare AI | Explainable AI | XGBoost
-
-<br><br>
-
-🩺 Explainable ICU Sepsis Early Warning System
-
-</p>
+🩺 ICU Sepsis Early Warning System
 
 </div>
 """, unsafe_allow_html=True)
