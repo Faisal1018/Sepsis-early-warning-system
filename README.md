@@ -8,7 +8,7 @@ An end-to-end **Healthcare AI System** for predicting **Sepsis Risk in ICU Patie
 
 | Platform          | Link                                                                      |
 | ----------------- | ------------------------------------------------------------------------- |
-| Streamlit App     | Coming Soon                                                               |
+| Streamlit App     | https://sepsis-early-warning-system-kjmtbe6wxygc3vzyvnrawc.streamlit.app/                                                              |
 | GitHub Repository | https://github.com/Faisal1018/Explainable-ICU-Sepsis-Early-Warning-System |
 
 ---
@@ -214,14 +214,11 @@ Higher values of:
 ---
 
 ## 📸 Screenshots
+screenshots/Dashboard
+screenshots/Confusion Matrix
+screenshots/Correlation Heatmap
+screenshots/SHAP Plot
 
-* Dataset Overview
-* Missing Value Analysis
-* Correlation Heatmap
-* Confusion Matrix
-* Feature Importance
-* SHAP Plot
-* Dashboard
 * Prediction Example
 
 ---
@@ -249,8 +246,7 @@ Explainable-ICU-Sepsis-Early-Warning-System/
 ├── data/                 # Raw & processed data
 ├── models/               # Trained model
 ├── notebooks/            # EDA & experiments
-├── reports/              # Outputs
-├── requirements.txt
+├── requirements.txt      # Outputs
 └── README.md
 ```
 
@@ -272,7 +268,7 @@ streamlit run app/streamlit_app.py
 **MD. FAISAL HAMID**
 
 * GitHub: https://github.com/Faisal1018
-* LinkedIn: (Add URL)
+* LinkedIn: https://www.linkedin.com/in/faisal-hamid-a39ba93b0/
 
 ---
 
