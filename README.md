@@ -215,16 +215,16 @@ Higher values of:
 
 ## 📸 Screenshots
 
-### Dashboard
+##Dashboard
 ![Dashboard](screenshots/Dashboard.png)
 
-### Confusion Matrix
+##Confusion Matrix
 ![Confusion Matrix](screenshots/Confusion_Matrix.png)
 
-### Correlation Heatmap
+##Correlation Heatmap
 ![Correlation Heatmap](screenshots/Correlation_Heatmap.png)
 
-### SHAP Plot
+##SHAP Plot
 ![SHAP Plot](screenshots/SHAP_Plot.png)
 
 ---
